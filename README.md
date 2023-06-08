@@ -33,7 +33,7 @@ docker run --rm --name odbe \
   --network host \
   -p 8080:8080 \
   -e DATA_SOURCE_NAME=oracle+oracledb://system:oracle@localhost:1521/xe \
-  zoidenberg/oracledb_exporter:latest
+  zoidenberg/oracledb-exporter-async:latest
 
 
 curl localhost:8080/metrics
@@ -64,7 +64,7 @@ docker run --rm --name odbe \
   -p 8080:8080 \
   -e DATA_SOURCE_NAME=oracle+oracledb://system:oracle@localhost:1521/xe \
   -e CUSTOM_METRICS=/opt/metrics.toml \
-  zoidenberg/oracledb_exporter:latest
+  zoidenberg/oracledb-exporter-async:latest
 ```
 
 ## Development
@@ -154,7 +154,7 @@ print(res)
 
 ```bash
 # --- build image
-docker build . -t oracledb_exporter
+docker build . -t oracledb-exporter-async
 # --- run container
 docker run --rm --name odbe \
   -p 8080:8080 \
