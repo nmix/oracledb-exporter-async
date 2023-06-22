@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "oracledb-exporter"
-version = "0.1.2"
+name = "oracledb-exporter-async"
+version = "0.1.3"
 description = "Prometheus Oracle database exporter"
 authors = ["Nik Mikhaylichenko <nn.mikh@yandex.ru>"]
 license = "MIT"

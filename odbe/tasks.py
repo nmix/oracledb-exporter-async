@@ -61,7 +61,11 @@ def collect_metrics(task: dict):
     metrics = task.get('metrics', {})
     for name in metricsdesc:
         # --- lower() - reponse from db always in lowercase
-        value = response.get(name.lower(), 0)
+        value = response.get(name.lower(), 0.0)
+        # --- value can be None
+        if value is None:
+            value = 0.0
+        # ---
         label_vals = [response.get(label.lower(), None) for label in labels]
         metric_obj = metrics.get(name, None)
         if not metric_obj:
@@ -71,7 +75,7 @@ def collect_metrics(task: dict):
         if isinstance(metric_obj, prometheus_client.Counter):
             metric_obj.inc(float(value))
         else:
-            metric_obj.set(value)
+            metric_obj.set(float(value))
 
 
 def execute(index: int):

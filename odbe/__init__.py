@@ -7,7 +7,7 @@ from odbe import extensions as ext
 from odbe import web
 from odbe import tasks
 
-APP_VERSION = '0.1.2'
+APP_VERSION = '0.1.3'
 
 DATA_SOURCE_NAME = os.environ.get(
         'DATA_SOURCE_NAME',
