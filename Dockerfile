@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-slim-bullseye
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y alien=8.95.4 libaio1=0.3.112-9 wget=1.21-1+deb11u1 \
