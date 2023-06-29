@@ -1,5 +1,0 @@
----
-include:
-  - project: iac/ci
-    file: projects/$CI_PROJECT_NAME.yml
-    ref: master
