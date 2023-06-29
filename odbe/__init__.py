@@ -7,7 +7,7 @@ from odbe import extensions as ext
 from odbe import web
 from odbe import tasks
 
-APP_VERSION = '0.1.3'
+APP_VERSION = '0.1.6'
 
 DATA_SOURCE_NAME = os.environ.get(
         'DATA_SOURCE_NAME',
@@ -25,6 +25,7 @@ def create_app(test_config=None):
             SQLALCHEMY_ENGINE_OPTIONS={'thick_mode': True},
             CUSTOM_METRICS=CUSTOM_METRICS,
             LOG_LEVEL=os.environ.get("LOG_LEVEL", "INFO"),
+            MISFIRE_GRACE_TIME=int(os.environ.get('MISFIRE_GRACE_TIME', '60')),
             )
     if test_config is None:
         # load the instance config, if it exists, when not testing

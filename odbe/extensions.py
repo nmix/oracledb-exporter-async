@@ -10,5 +10,5 @@ scheduler = flask_apscheduler.APScheduler()
 
 def init_exporter(app):
     exporter = prometheus_flask_exporter.PrometheusMetrics(app)
-    exporter.info('app_info', 'Application info', version='0.1.0')
+    exporter.info('app_info', 'OracleDB Exporter', version='0.1.6')
     return exporter

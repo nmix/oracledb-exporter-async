@@ -27,6 +27,11 @@ DEFAULT_TRIGGER_INTERVAL = 30  # seconds
 _tasks_registry = []
 
 
+def app():
+    '''Instance of application'''
+    return ext.scheduler.app
+
+
 def collect_metrics(task: dict):
     '''Create metric objects with task data and response from DB
 
@@ -85,11 +90,11 @@ def execute(index: int):
     Args:
         index - task index in global registry
     '''
-    with ext.scheduler.app.app_context():
+    with app().app_context():
         task = _tasks_registry[index]
         context = task.get('context')
         metrics = str(list(task.get('metricsdesc', []).keys()))
-        ext.scheduler.app.logger.info(f'Request for {context}{metrics}')
+        app().logger.info(f'Request for {context}{metrics}')
         # --- make sql request to DB
         #     take first row in response only
         #     response example:
@@ -102,11 +107,11 @@ def execute(index: int):
         request = task['request']
         result = ext.db.session.execute(sa.text(request)).all()
         if len(result) == 0:
-            ext.scheduler.app.logger.warning(
+            app().logger.warning(
                     f'Response for {context}{metrics} has no rows in answer')
             return
         response = result[0]._asdict()
-        ext.scheduler.app.logger.info(
+        app().logger.info(
                 f'Response for {context}{metrics}:  {response}')
         task['response'] = response
         collect_metrics(task)
@@ -156,7 +161,7 @@ def _read_tasks(path: str):
     # make file validation
     tasks = tomllib.load(file).get('metric', [])
     if len(tasks) == 0:
-        ext.scheduler.app.logger.warn(
+        app().logger.warn(
                 f'There are no metrics load from {path}')
     return tasks
 
@@ -181,6 +186,7 @@ def _create_job(task: dict, func_args: list, job_id: str):
             id=job_id,
             name=job_name,
             replace_existing=True,
+            misfire_grace_time=app().config['MISFIRE_GRACE_TIME'],
         )
     else:
         interval = task.get('interval', DEFAULT_TRIGGER_INTERVAL)
@@ -192,6 +198,7 @@ def _create_job(task: dict, func_args: list, job_id: str):
             id=job_id,
             name=job_name,
             replace_existing=True,
+            misfire_grace_time=app().config['MISFIRE_GRACE_TIME'],
         )
     return job
 
@@ -208,4 +215,4 @@ def load(metrics_path: str):
     for index, task in enumerate(_tasks_registry):
         job = _create_job(task, func_args=[index], job_id=str(index))
         task['metrics'] = _create_metrics(task)
-        ext.scheduler.app.logger.info(f'job {job.name} scheduled')
+        app().logger.info(f'job {job.name} scheduled')

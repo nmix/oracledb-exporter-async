@@ -16,7 +16,7 @@ In this project, the database query and Prometheus scraping are decoupled. The s
 
 The `interval` field specifies the execution interval of the query in seconds. For example, `interval = 30` means the query will be executed once every 30 seconds. The `cron` field defines the schedule for query execution in cron format. For instance, `cron = "*/5 * * * *"` means the query will be executed every 5 minutes.
 
-Each `[[metric]]` section can have only one field defined - either `interval` or `cron`. If neither `interval` nor `cron` is specified, the default value of `interval = 15` will be set.
+Each `[[metric]]` section can have only one field defined - either `interval` or `cron`. If neither `interval` nor `cron` is specified, the default value of `interval = 30` will be set.
 
 See *./custom_metrics.toml* in root project directory.
 
