@@ -88,7 +88,8 @@ def execute(index: int):
     with ext.scheduler.app.app_context():
         task = _tasks_registry[index]
         context = task.get('context')
-        ext.scheduler.app.logger.info(f'Request for {context}')
+        metrics = str(list(task.get('metricsdesc', []).keys()))
+        ext.scheduler.app.logger.info(f'Request for {context}{metrics}')
         # --- make sql request to DB
         #     take first row in response only
         #     response example:
@@ -99,9 +100,15 @@ def execute(index: int):
         #       'label_2': 'Second label'
         #       }
         request = task['request']
-        response = ext.db.session.execute(sa.text(request)).mappings().first()
+        result = ext.db.session.execute(sa.text(request)).all()
+        if len(result) == 0:
+            ext.scheduler.app.logger.warning(
+                    f'Response for {context}{metrics} has no rows in answer')
+            return
+        response = result[0]._asdict()
+        ext.scheduler.app.logger.info(
+                f'Response for {context}{metrics}:  {response}')
         task['response'] = response
-        ext.scheduler.app.logger.info(f'Response: {response}')
         collect_metrics(task)
 
 
